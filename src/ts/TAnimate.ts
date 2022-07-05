@@ -1,4 +1,6 @@
 import { Object3D } from "three";
+// import { Flow } from "";
+// import { Flow } from "three/examples/jsm/modifiers/CurveModifier";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../ThingOrigin";
 
@@ -15,7 +17,7 @@ export class TAnimate {
      */
     public rotateAngle(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
-            console.warn("旋转动画播放失败，物体不存在");
+            console.warn("旋转（角度）失败，物体不存在");
             return;
         }
         model.updateWorldMatrix(true, true);
@@ -47,7 +49,7 @@ export class TAnimate {
      */
     public rotateRadian(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
-            console.warn("旋转动画播放失败，物体不存在");
+            console.warn("旋转（弧度）失败，物体不存在");
             return;
         }
         model.updateWorldMatrix(true, true);
@@ -79,7 +81,7 @@ export class TAnimate {
      */
     public move(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
-            console.warn("平移动画播放失败，物体不存在");
+            console.warn("平移失败，物体不存在");
             return;
         }
         model.updateWorldMatrix(true, true);
@@ -112,7 +114,7 @@ export class TAnimate {
      */
     public showExploded(model: Object3D, ratio: number, time: number) {
         if (!model) {
-            console.warn("爆炸图展示失败，物体不存在");
+            console.warn("爆炸失败，物体不存在");
             return;
         }
 
@@ -124,4 +126,8 @@ export class TAnimate {
             this.move(child, "z", a[i].position.z, a[i].position.z * ratio, time);
         }
     }
+
+    // public alongPoints(model: Object3D, points: number[][]) {
+    //     let flow = new Flow(objectToCurve);
+    // }
 }

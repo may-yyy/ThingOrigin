@@ -14,8 +14,20 @@ export class TMachine {
      * @param {jointDataParams} jointData 关节动作数据
      */
     public setJointAngle(robot: Object3D, joints: jointsParams[], jointData: jointDataParams) {
+        if (!robot) {
+            console.warn("重置【" + robot.name + "】（角度）失败，物体不存在");
+            return;
+        }
+        if (JSON.stringify(jointData) == "{}") {
+            console.warn(robot.name + "：关节数据为空，无法运行重置角度");
+            return;
+        }
         for (var i = 0; i < joints.length; i++) {
-            robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)] / 180) * Math.PI;
+            if (jointData["joint" + (i + 1)]) {
+                robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)] / 180) * Math.PI;
+            } else {
+                console.warn("重置数据异常：" + i + "=" + jointData["joint" + (i + 1)]);
+            }
         }
     }
 
@@ -28,8 +40,20 @@ export class TMachine {
      * @param {jointDataParams} jointData 关节动作数据
      */
     public setJointRadian(robot: Object3D, joints: jointsParams[], jointData: jointDataParams) {
+        if (!robot) {
+            console.warn("重置【" + robot.name + "】（弧度）失败，物体不存在");
+            return;
+        }
+        if (JSON.stringify(jointData) == "{}") {
+            console.warn(robot.name + "：关节数据为空，无法运行重置弧度");
+            return;
+        }
         for (var i = 0; i < joints.length; i++) {
-            robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)]);
+            if (jointData["joint" + (i + 1)]) {
+                robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)]);
+            } else {
+                console.warn("【" + robot.name + "】数据异常：" + i + "=" + jointData["joint" + (i + 1)]);
+            }
         }
     }
 
@@ -44,15 +68,23 @@ export class TMachine {
      * @param {number} time 动画时间
      */
     public twinAngle(robot: Object3D, joints: jointsParams[], preData: jointDataParams, curData: jointDataParams, time: number) {
+        if (!robot) {
+            console.warn("旋转角度失败，物体不存在");
+            return;
+        }
         for (var i = 0; i < joints.length; i++) {
-            if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
-                ThingOrigin.animate.rotateAngle(
-                    robot.getObjectByName(joints[i].name),
-                    joints[i].axis,
-                    joints[i].reverse * Number(preData["joint" + (i + 1)]),
-                    joints[i].reverse * Number(curData["joint" + (i + 1)]),
-                    time
-                );
+            if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+                if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+                    ThingOrigin.animate.rotateAngle(
+                        robot.getObjectByName(joints[i].name),
+                        joints[i].axis,
+                        joints[i].reverse * Number(preData["joint" + (i + 1)]),
+                        joints[i].reverse * Number(curData["joint" + (i + 1)]),
+                        time
+                    );
+                }
+            } else {
+                console.warn(joints[i].name + "数据异常：pre=" + preData["joint" + (i + 1)] + ",cur=" + curData["joint" + (i + 1)]);
             }
         }
     }
@@ -68,15 +100,23 @@ export class TMachine {
      * @param {number} time 动画时间
      */
     public twinRadian(robot: Object3D, joints: jointsParams[], preData: jointDataParams, curData: jointDataParams, time: number) {
+        if (!robot) {
+            console.warn("旋转弧度失败，物体不存在");
+            return;
+        }
         for (var i = 0; i < 6; i++) {
-            if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
-                ThingOrigin.animate.rotateRadian(
-                    robot.getObjectByName(joints[i].name),
-                    joints[i].axis,
-                    joints[i].reverse * Number(preData["joint" + (i + 1)]),
-                    joints[i].reverse * Number(curData["joint" + (i + 1)]),
-                    time
-                );
+            if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+                if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+                    ThingOrigin.animate.rotateRadian(
+                        robot.getObjectByName(joints[i].name),
+                        joints[i].axis,
+                        joints[i].reverse * Number(preData["joint" + (i + 1)]),
+                        joints[i].reverse * Number(curData["joint" + (i + 1)]),
+                        time
+                    );
+                }
+            } else {
+                console.warn(joints[i].name + "数据异常：pre=" + preData["joint" + (i + 1)] + ",cur=" + curData["joint" + (i + 1)]);
             }
         }
     }
