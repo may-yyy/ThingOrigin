@@ -58,6 +58,18 @@ var data = {
                             title: "背景图片",
                             url: "./scene/backgroundImg.html",
                         },
+                        {
+                            title: "模型显示隐藏",
+                            url: "./scene/modelVisible.html",
+                        },
+                        {
+                            title: "模型移除",
+                            url: "./scene/modelRemove.html",
+                        },
+                        {
+                            title: "模型克隆",
+                            url: "./scene/modelClone.html",
+                        },
                     ],
                 },
             ],

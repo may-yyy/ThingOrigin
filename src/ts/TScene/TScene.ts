@@ -329,9 +329,9 @@ export class TScene extends Scene {
     /**
      * @description 克隆模型
      * @author LL
-     * @param {string} sceneName
-     * @param {string} uuid
-     * @param {number[]} position
+     * @param {string} fromSceneName 源场景名称
+     * @param {string} uuid 模型的uuid
+     * @param {number[]} position 目标位置
      * @return {*}  {Group}
      */
     public cloneObject(fromSceneName: string, uuid: string, position: number[]): Group {

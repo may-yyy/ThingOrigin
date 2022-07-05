@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #modelVisible {
+            width: 85%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div class="page-title">模型显示隐藏效果</div>
+
+<div class="content-title">效果展示</div>
+
+<button onclick="changeShowOrHide()">切换显 / 隐</button>
+<div id="modelVisible">
+
+</div>
+
+<div class="content-title">API说明</div>
+<div class="api-code">
+    setVisible(name: string, visible: boolean)
+</div>
+
+<div class="api-param">name - 模型名称</div>
+<div class="api-param">visible - 是否可见</div>
+
+
+<div class="content-title">案例代码</div>
+<pre id="codeShow"></pre>
+
+<script src="../../../js/thingorigin.js"></script>
+
+<!-- 案例代码 -->
+<script id="code">
+    let scene = ThingOrigin.addScene("modelVisible", document.getElementById("modelVisible"));
+    //加载模型
+    let modelName = null;
+    ThingOrigin.model.initFileModel("gltf", '../../../static/three/examplesModel/Parrot.glb', {
+        scale: [1, 1, 1],
+        rotation: [0, 30, 0],
+        position: [0, 30, 0]
+    }).then((model) => {
+        modelName = model.name;
+        scene.add(model);
+    })
+
+    //控制模型显示隐藏效果
+    let isVisible = true;
+    function changeShowOrHide(){
+        isVisible = !isVisible;
+        scene.setVisible(modelName,isVisible)
+    }
+</script>
+<!-- 其他 -->
+<script>
+    document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+</script>
+</body>
+</html>
