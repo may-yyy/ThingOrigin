@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>initLine</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #initLine {
+            width: 85%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-title">生成直线</div>
+
+    <div class="content-title">效果展示</div>
+
+    
+    <div id="initLine"></div>
+
+    <div class="content-title">API说明</div>
+    <div class="api-code">
+        initLine(p1: number[], p2: number[], params: LineParams = { color: "#f00" })</div>
+    <div class="api-param">p1 - 起始点</div>
+    <div class="api-param">p2 - 终止点</div>
+    <div class="api-param">param - 参数，颜色 例：{ color: "#f00" }</div>
+
+    <div class="content-title">案例代码</div>
+    <pre id="codeShow"></pre>
+
+    <script src="../../../js/thingorigin.js"></script>
+
+    <!-- 案例代码 -->
+    <script id="code">
+        let scene = ThingOrigin.addScene("initLine", document.getElementById("initLine"));
+        scene.add(
+            ThingOrigin.model.initLine([0,10,10],[20,20,10],{color:"#f00"})
+        )
+    </script>
+    <!-- 其他 -->
+    <script>
+        document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+    </script>
+</body>
+
+</html>

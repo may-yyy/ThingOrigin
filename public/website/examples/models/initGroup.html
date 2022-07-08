@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>initLine</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #initGroup {
+            width: 85%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-title">生成直线</div>
+
+    <div class="content-title">效果展示</div>
+
+
+    <div id="initGroup"></div>
+
+    <div class="content-title">API说明</div>
+    <div class="api-code">
+        initGroup(name: string, geometryConfigs: geometryConfigs = { position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }, userData?: object)
+    </div>
+    <div class="api-param">name - 名称</div>
+    <div class="api-param">geometryConfigs - 几何参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]</div>
+    <div class="api-param">userData（选） - 填入模型的userData</div>
+
+    <div class="content-title">案例代码</div>
+    <pre id="codeShow"></pre>
+
+    <script src="../../../js/thingorigin.js"></script>
+
+    <!-- 案例代码 -->
+    <script id="code">
+        let scene = ThingOrigin.addScene("initGroup", document.getElementById("initGroup"));
+        scene.add(
+            ThingOrigin.model.initGroup(
+                'newGroup', 
+                { 
+                    position: [0, 0, 0], 
+                    scale: [1, 1, 1], 
+                    rotation: [0, 0, 0] ,
+                    color: "#f00"
+                }, 
+            )
+        )
+    </script>
+    <!-- 其他 -->
+    <script>
+        document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+    </script>
+</body>
+
+</html>

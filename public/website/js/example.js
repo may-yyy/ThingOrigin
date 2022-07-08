@@ -60,6 +60,23 @@ var data = {
                         },
                     ],
                 },
+                {
+                    title: "model",
+                    children: [
+                        {
+                            title: "导入模型文件",
+                            url: "./models/initFileModel.html",
+                        },
+                        {
+                            title: "新建group",
+                            url: "./models/initGroup.html",
+                        },
+                        {
+                            title: "生成直线",
+                            url: "./models/initLine.html",
+                        },
+                    ],
+                },
             ],
         },
     ],

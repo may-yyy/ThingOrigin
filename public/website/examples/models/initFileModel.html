@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>initFileModel</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #initFileModel {
+            width: 85%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-title">导入模型文件</div>
+
+    <div class="content-title">效果展示</div>
+
+    
+    <div id="initFileModel"></div>
+
+    <div class="content-title">API说明</div>
+    <div class="api-code">
+        initFileModel(type: string, url: string, modelConfigs: modelConfigs, cached:boolean)</div>
+    <div class="api-param">type - 模型文件类型 例：'fbx'||'gltf'||'stl'</div>
+    <div class="api-param">url - 文件读取地址</div>
+    <div class="api-param">modelConfigs - 模型配置参数，位置和放大倍数 例：{position: [0, 0, 0], scale: [1, 1, 1] }</div>
+    <div class="api-param">[cached=false] - 是否是本地缓存模型</div>
+
+    <div class="content-title">案例代码</div>
+    <pre id="codeShow"></pre>
+
+    <script src="../../../js/thingorigin.js"></script>
+
+    <!-- 案例代码 -->
+    <script id="code">
+        let scene = ThingOrigin.addScene("initFileModel", document.getElementById("initFileModel"));
+        scene.add(
+            ThingOrigin.model.initFileModel(
+            'gltf',
+            'D:\jixiebi.gltf',
+            { 
+                position: [0, 0, 0], 
+                scale: [1, 1, 1], 
+                rotation: [0, 0, 0] 
+            },
+            false
+        )
+        )
+        
+    </script>
+    <!-- 其他 -->
+    <script>
+        document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+    </script>
+</body>
+
+</html>
