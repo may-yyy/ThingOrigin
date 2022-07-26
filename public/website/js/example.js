@@ -75,6 +75,10 @@ var data = {
                             title: "生成直线",
                             url: "./models/initLine.html",
                         },
+                        {
+                            title: "生成点云组",
+                            url: "./models/initPoints.html",
+                        },
                     ],
                 },
             ],

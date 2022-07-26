@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>initLine</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+        <style>
+            #initPoints {
+                width: 85%;
+                height: 500px;
+                position: relative;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="page-title">生成直线</div>
+
+        <div class="content-title">效果展示</div>
+
+        <div id="initPoints"></div>
+
+        <div class="content-title">API说明</div>
+        <div class="api-code">initPoints(GroupName: string, positions: pointsData[], pointConfigs: pointConfigsParams, userData?: object)</div>
+        <div class="api-param">GroupName - 点云组名称</div>
+        <div class="api-param">positions - 点云位置数组</div>
+        <div class="api-param">pointConfigs - 点云参数</div>
+        <div class="api-param">userData（选） - 自定义数据</div>
+
+        <div class="content-title">案例代码</div>
+        <pre id="codeShow"></pre>
+
+        <script src="../../../js/thingorigin.js"></script>
+
+        <!-- 案例代码 -->
+        <script id="code">
+            let scene = ThingOrigin.addScene("initPoints", document.getElementById("initPoints"));
+            scene.add(
+                ThingOrigin.model.initPoints(
+                    "点云组",
+                    [
+                        [0, 0, 0],
+                        [10, 20, 20],
+                        [40, 80, 90],
+                    ],
+                    { color: "#f00", size: 20 }
+                )
+            );
+        </script>
+        <!-- 其他 -->
+        <script>
+            document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+        </script>
+    </body>
+</html>
