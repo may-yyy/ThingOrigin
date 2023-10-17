@@ -1,21 +1,61 @@
 import * as CANNON from "cannon";
-import { AnimationMixer, Clock, LoopOnce, Vector3 } from "three";
+import { AnimationMixer, Clock, LoopOnce, Vector3, MeshBasicMaterial } from "three";
 import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 
 let mixer;
+// ThingOrigin.model
+//   .initFileModel("gltf", "/static/three/animate/scene.gltf", {
+//     scale: [4, 4, 4],
+//   })
+//   .then((model) => {
+//     //@ts-ignore
+//     mainScene.add(model.scene);
+
+//     //@ts-ignore
+//     mainScene.playAnimation(model, 0);
+//   });
+const darkMaterial = new MeshBasicMaterial({ color: 'black' });
+const materials = {};
 ThingOrigin.model
-  .initFileModel("gltf", "/static/three/animate/scene.gltf", {
-    scale: [4, 4, 4],
+  .initFileModel("gltf", "/static/three/test/工厂.gltf", {
+    scale: [1, 1, 1],
   })
   .then((model) => {
+    console.log(model.scene)
     //@ts-ignore
     mainScene.add(model.scene);
-
-    //@ts-ignore
-    mainScene.playAnimation(model, 0);
+    model.scene.traverse((obj) => {
+      if (obj.name == '设备A') {
+        console.log(obj);
+        // mainScene.effect.initBreath(obj);//描边
+        mainScene.effect.initBloom(obj);//发光
+        render();
+      }
+    })
   });
+
+function darkenNonBloomed(obj) {
+  if (obj.isMesh && mainScene.effect.bloomLayer.test(obj.layers) === false) {
+    materials[obj.uuid] = obj.material;
+    obj.material = darkMaterial;
+  }
+}
+
+function restoreMaterial(obj) {
+  if (materials[obj.uuid]) {
+    obj.material = materials[obj.uuid];
+    delete materials[obj.uuid];
+  }
+}
+
+function render() {
+  
+  mainScene.traverse(darkenNonBloomed);
+  mainScene.effect.effectComposer.render();
+  mainScene.traverse(restoreMaterial);
+}
 
 //indexedDB缓存模型
 // let modelInfo = {

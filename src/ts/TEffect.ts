@@ -7,12 +7,13 @@ import {
   Plane,
   Vector2,
   Vector3,
+  ShaderMaterial,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
 import { ThingOrigin } from "../ThingOrigin";
 import { TScene } from "./TScene/TScene";
@@ -29,6 +30,9 @@ export class TEffect {
 
   public bloomPass: UnrealBloomPass;
   public bloomLayer: Layers;
+
+  public finalComposer: EffectComposer;
+  public finalPass: ShaderPass;
 
   public sceneClipPlane: Plane;
   public localClipPlane: Plane;
@@ -47,7 +51,9 @@ export class TEffect {
    * @param {ThingOriginParams} sceneParams 场景参数
    */
   public initEffect(sceneParams: ThingOriginParams) {
+    console.log(sceneParams)
     this.effectComposer = new EffectComposer(this.tScene.renderer);
+    this.effectComposer.renderToScreen = true// 不渲染到屏幕上
     this.effectComposer.setSize(
       this.tScene.container.clientWidth,
       this.tScene.container.clientHeight
@@ -89,21 +95,57 @@ export class TEffect {
     this.effectFXAA.needsSwap = true;
     this.effectComposer.addPass(this.effectFXAA);
 
-    // this.bloomPass = new UnrealBloomPass(
-    //   new Vector2(
-    //     this.tScene.container.clientWidth,
-    //     this.tScene.container.clientHeight
-    //   ),
-    //   1.5,
-    //   0.4,
-    //   0.85
-    // );
-    // this.bloomPass.threshold = sceneParams.effectComposer.bloomPass.threshold;
-    // this.bloomPass.strength = sceneParams.effectComposer.bloomPass.strength;
-    // this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius;
-    // this.effectComposer.addPass(this.bloomPass);
-    // const bloomLayer = new Layers();
-    // bloomLayer.set(TEffect.BLOOM_SCENE);
+    this.finalComposer = new EffectComposer(this.tScene.renderer)
+    this.finalComposer.renderToScreen = true
+    this.bloomLayer = new Layers();
+    this.bloomLayer.set(TEffect.BLOOM_SCENE);
+    this.bloomPass = new UnrealBloomPass(
+      new Vector2(
+        this.tScene.container.clientWidth,
+        this.tScene.container.clientHeight
+      ),
+      1.5,
+      0.4,
+      0.85
+    );
+    this.bloomPass.strength = sceneParams.effectComposer.bloomPass.strength;//1
+    this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius;//0.4
+    this.bloomPass.threshold = sceneParams.effectComposer.bloomPass.threshold;//炫光的阈值（场景中的光强大于该值才会产生炫光效果）0.85
+    this.bloomPass.renderToScreen = true;
+    this.effectComposer.addPass(this.bloomPass);
+
+    this.finalPass = new ShaderPass(
+      new ShaderMaterial({
+        uniforms: {
+            baseTexture: { value: null },
+            bloomTexture: { value: this.effectComposer.renderTarget2.texture },
+        },
+        vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }
+        `,
+        fragmentShader: `
+        uniform sampler2D baseTexture;
+        uniform sampler2D bloomTexture;
+        varying vec2 vUv;
+        void main() {
+          gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+        }
+        `,
+        defines: {},
+    }),
+    'baseTexture'
+    );
+    this.finalPass.needsSwap = true;
+
+    
+    this.finalComposer.addPass(this.renderPass)
+    this.finalComposer.addPass(this.finalPass)
+
+    
   }
 
   /**
@@ -229,8 +271,42 @@ export class TEffect {
   public disposeBreath() {
     this.outlinePass.selectedObjects = [];
   }
-
+  /**
+   * @description 给模型添加发光效果
+   * @author MY
+   * @param {Object3D} model 模型
+   */
   public initBloom(model: Object3D) {
-    model.layers.toggle(TEffect.BLOOM_SCENE);
+    console.log(this.tScene)
+    
+    if (!model) {
+      console.warn("发光效果添加失败，物体不存在");
+      return;
+    }
+    model.traverse((child) => {
+      if (child instanceof Mesh) {
+        console.log(child);
+        (child as Mesh).layers.toggle(TEffect.BLOOM_SCENE);
+      }
+    })
+    // model.layers.toggle(TEffect.BLOOM_SCENE);
+  }
+  /**
+   * @description 取消发光效果
+   * @author MY
+   * @param {Object3D} model 模型
+   */
+  public disposeBloom(model: Object3D) {
+    if (!model) {
+      console.warn("发光效果取消失败，物体不存在");
+      return;
+    }
+    model.traverse((child) => {
+      if (child instanceof Mesh) {
+        console.log(child);
+        (child as Mesh).layers.disable(TEffect.BLOOM_SCENE);
+      }
+    })
+    // model.layers.toggle(TEffect.BLOOM_SCENE);
   }
 }
